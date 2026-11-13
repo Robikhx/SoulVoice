@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.Circle?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.transmitter.MainController"
+            stylesheets="@style.css"
+            minWidth="1100" minHeight="700"
+            prefWidth="1200" prefHeight="750">
+
+    <!-- TOP: Connection Status & Controls -->
+    <top>
+        <VBox spacing="0">
+            <!-- Large Connection Status Banner -->
+            <HBox fx:id="statusBanner" styleClass="status-banner, status-disconnected" 
+                  alignment="CENTER" spacing="15">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20"/>
+                </padding>
+                <Circle fx:id="statusIndicator" radius="12" styleClass="status-dot"/>
+                <Label fx:id="statusLabel" text="Not Connected" styleClass="status-text"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="voiceStatusLabel" text="🔊 Voice Ready" styleClass="voice-status"/>
+            </HBox>
+
+            <!-- Simplified Control Bar -->
+            <HBox spacing="15" styleClass="control-bar" alignment="CENTER_LEFT">
+                <padding>
+                    <Insets top="15" right="20" bottom="15" left="20"/>
+                </padding>
+                
+                <!-- Port Selection -->
+                <VBox spacing="8" styleClass="control-group">
+                    <Label text="Select Port" styleClass="control-label"/>
+                    <ComboBox fx:id="portComboBox" promptText="Choose a port..." 
+                             prefWidth="220" prefHeight="45"/>
+                </VBox>
+                
+                <!-- Connection Buttons -->
+                <VBox spacing="8" styleClass="control-group">
+                    <Label text="Connection" styleClass="control-label"/>
+                    <HBox spacing="12">
+                        <Button text="▶ Connect" fx:id="connectBtn" onAction="#onConnect" 
+                               styleClass="btn-connect" prefWidth="120" prefHeight="45"/>
+                        <Button text="⏹ Disconnect" fx:id="disconnectBtn" onAction="#onDisconnect" 
+                               styleClass="btn-disconnect" disable="true" prefWidth="120" prefHeight="45"/>
+                    </HBox>
+                </VBox>
+                
+                <!-- Refresh Button -->
+                <VBox spacing="8" styleClass="control-group">
+                    <Label text=" " styleClass="control-label"/>
+                    <Button text="🔄 Refresh Ports" fx:id="refreshBtn" onAction="#onRefresh" 
+                           styleClass="btn-refresh" prefWidth="160" prefHeight="45"/>
+                </VBox>
+                
+                <Region HBox.hgrow="ALWAYS"/>
+                
+                <!-- Voice Selection -->
+                <VBox spacing="8" styleClass="control-group">
+                    <Label text="Voice" styleClass="control-label"/>
+                    <HBox spacing="12">
+                        <ComboBox fx:id="voiceComboBox" promptText="Select voice..." 
+                                 prefWidth="220" prefHeight="45"/>
+                        <Button text="🔊 Test" onAction="#onTestVoice" 
+                               styleClass="btn-test" prefWidth="100" prefHeight="45"/>
+                    </HBox>
+                </VBox>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- CENTER: Main Message Display + Side Buttons -->
+    <center>
+        <HBox spacing="0">
+            <!-- Main Message Panel -->
+            <VBox spacing="10" styleClass="main-content" HBox.hgrow="ALWAYS">
+                <padding>
+                    <Insets top="15" right="15" bottom="15" left="20"/>
+                </padding>
+                
+                <!-- Single Unified Message Panel -->
+                <VBox spacing="10" VBox.vgrow="ALWAYS" styleClass="message-panel, all-messages-panel">
+                    <HBox alignment="CENTER" spacing="12" styleClass="panel-header">
+                        <Label text="💬 ALL MESSAGES" styleClass="panel-title"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="Clear All" onAction="#onClearSerial" 
+                               styleClass="btn-clear" prefWidth="100" prefHeight="35"/>
+                    </HBox>
+                    <ScrollPane fitToWidth="true" fitToHeight="true" VBox.vgrow="ALWAYS" 
+                               styleClass="message-scroll">
+                        <TextArea fx:id="serialOutputArea" editable="false" wrapText="true" 
+                                 styleClass="message-display, all-messages-display"/>
+                    </ScrollPane>
+                </VBox>
+            </VBox>
+
+            <!-- Side Panel for Action Buttons -->
+            <VBox spacing="15" alignment="CENTER" styleClass="side-panel" prefWidth="90">
+                <padding>
+                    <Insets top="60" right="15" bottom="15" left="15"/>
+                </padding>
+                
+                <Button text="📖" onAction="#onShowMapping" 
+                       styleClass="btn-side" prefWidth="60" prefHeight="60">
+                    <tooltip>
+                        <javafx.scene.control.Tooltip text="Button Mapping Guide"/>
+                    </tooltip>
+                </Button>
+                
+                <Button text="📤" onAction="#onShowMyMessages" 
+                       styleClass="btn-side" prefWidth="60" prefHeight="60">
+                    <tooltip>
+                        <javafx.scene.control.Tooltip text="My Messages History"/>
+                    </tooltip>
+                </Button>
+                
+                <Button text="📋" onAction="#onShowLogs" 
+                       styleClass="btn-side" prefWidth="60" prefHeight="60">
+                    <tooltip>
+                        <javafx.scene.control.Tooltip text="System Logs"/>
+                    </tooltip>
+                </Button>
+            </VBox>
+        </HBox>
+    </center>
+
+    <!-- BOTTOM: Quick Messages + Custom Input -->
+    <bottom>
+        <VBox spacing="0">
+            <!-- Quick Message Buttons -->
+            <HBox fx:id="quickMessageBar" spacing="12" styleClass="quick-message-bar" 
+                  alignment="CENTER">
+                <padding>
+                    <Insets top="15" right="20" bottom="15" left="20"/>
+                </padding>
+                <Label text="Quick:" styleClass="quick-label"/>
+                <Button text="✓ Yes" onAction="#onQuickYes" 
+                       styleClass="btn-quick, btn-quick-yes" prefHeight="50" HBox.hgrow="ALWAYS"/>
+                <Button text="✗ No" onAction="#onQuickNo" 
+                       styleClass="btn-quick, btn-quick-no" prefHeight="50" HBox.hgrow="ALWAYS"/>
+                <Button text="💙 Thank You" onAction="#onQuickThanks" 
+                       styleClass="btn-quick" prefHeight="50" HBox.hgrow="ALWAYS"/>
+                <Button text="💡 I Understand" onAction="#onQuickUnderstand" 
+                       styleClass="btn-quick" prefHeight="50" HBox.hgrow="ALWAYS"/>
+                <Button text="🆘 I Need Help" onAction="#onQuickHelp" 
+                       styleClass="btn-quick, btn-quick-help" prefHeight="50" HBox.hgrow="ALWAYS"/>
+            </HBox>
+
+            <!-- Custom Message Input -->
+            <HBox spacing="15" styleClass="input-bar" alignment="CENTER">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20"/>
+                </padding>
+                <Label text="Type Message:" styleClass="input-label"/>
+                <TextField fx:id="messageInput" promptText="Type what you want to say..." 
+                          HBox.hgrow="ALWAYS" onAction="#onCustomMessage" 
+                          styleClass="message-input" prefHeight="55"/>
+                <Button text="🔊 SPEAK" onAction="#onCustomMessage" 
+                       styleClass="btn-speak" prefWidth="150" prefHeight="55"/>
+            </HBox>
+        </VBox>
+    </bottom>
+
+    <!-- Hidden TextAreas for popup windows -->
+    <fx:define>
+        <TextArea fx:id="serialInputArea" editable="false" wrapText="true" visible="false"/>
+        <TextArea fx:id="logsArea" editable="false" wrapText="true" visible="false"/>
+    </fx:define>
+
+</BorderPane>
